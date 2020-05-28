@@ -12,13 +12,26 @@ import { ClientsService } from './clients/clients.service';
 import { ClientsModule } from './clients/clients.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from 'config/database.config';
-import { Users } from './users/entities/users.entity';
+import { RentModule } from './rent/rent.module';
+import { RentService } from './rent/rent.service';
+import { RentController } from './rent/rent.controller';
+import { User } from './users/entities/user.entity';
+import { Rent } from './rent/entities/rent.entity';
+import { Client } from './clients/entities/client.entity';
+import { Car } from './cars/entities/car.entity';
+import { CarCategory } from './cars/entities/car-category.entity';
+import { CarExpense } from './cars/entities/car-expense.entity';
+import { CarFuelType } from './cars/entities/car-fuel-type.entity';
+import { CarMake } from './cars/entities/car-make.entity';
+import { CarModel } from './cars/entities/car-model.entity';
+import { CarRegistration } from './cars/entities/car-registration';
 
 @Module({
   imports: [
     UsersModule,
     CarsModule,
     ClientsModule,
+    RentModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: DatabaseConfig.hostname,
@@ -26,8 +39,19 @@ import { Users } from './users/entities/users.entity';
       username: DatabaseConfig.username,
       password: DatabaseConfig.password,
       database: DatabaseConfig.database,
-      entities: [Users],
-      synchronize: true,
+      entities: [
+        User,
+        Rent,
+        Client,
+        Car,
+        CarCategory,
+        CarExpense,
+        CarFuelType,
+        CarMake,
+        CarModel,
+        CarRegistration,
+      ],
+      synchronize: false,
     }),
   ],
   controllers: [
@@ -35,7 +59,14 @@ import { Users } from './users/entities/users.entity';
     UsersController,
     CarsController,
     ClientsController,
+    RentController,
   ],
-  providers: [AppService, UsersService, CarsService, ClientsService],
+  providers: [
+    AppService,
+    UsersService,
+    CarsService,
+    ClientsService,
+    RentService,
+  ],
 })
 export class AppModule {}

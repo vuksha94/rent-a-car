@@ -13,6 +13,15 @@ export class CarsController {
     return this.carsService.findAll();
   }
 
+  @Get('models')
+  findAllModels() {
+    return this.carsService.findAllModels();
+  }
+  @Get('models/:id')
+  findModel(@Param('id') id: string) {
+    return this.carsService.findModel(id);
+  }
+
   // details for selected car with :id + sum of all expenses +  list of all clients that have rented a selected car
   @Get(':id')
   findOne(@Param('id') id: string) {
