@@ -25,8 +25,8 @@ export class CarExpense {
   @Column('varchar', { name: 'ce_description', length: 64 })
   ceDescription: string;
 
-  @Column('int', { name: 'ce_price' })
-  cePrice: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, name: 'ce_price' })
+  cePrice: string;
 
   @ManyToOne(
     () => Car,

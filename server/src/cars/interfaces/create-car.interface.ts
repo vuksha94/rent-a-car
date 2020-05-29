@@ -1,12 +1,12 @@
 export interface CreateCar {
   carId?: string;
-  carMake: number;
-  carModel: number;
-  carFuelType: number;
-  carCategory: number;
+  carMakeId: number;
+  carModelId: number;
+  carFuelTypeId: number;
+  carCategoryId: number;
   carYear: number;
-  carEngineVolume: number;
-  carAvailable: number;
-  carKmDistance: number;
-  carFuelLevel: number;
+  carEngineVolume: string;
+  carAvailable?: boolean;
+  carKmDistance?: string;
+  carFuelLevel?: string;
 }

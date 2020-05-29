@@ -1,6 +1,6 @@
 export interface AddExpenses {
-  expenseId?: string;
-  carId: string;
+  expenseId?: number;
+  carId: number;
   description: string;
   price: string;
 }

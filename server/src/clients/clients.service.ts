@@ -1,17 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClient } from './interfaces/create-client.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Client } from './entities/client.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ClientsService {
-  findAll() {
-    return 'Find all clients';
+  constructor(
+    @InjectRepository(Client)
+    private clientRepository: Repository<Client>,
+  ) {}
+
+  findAll(): Promise<Client[]> {
+    return this.clientRepository.find();
   }
 
   findOne(numId: string) {
-    return `Car number ${numId}`;
+    return this.clientRepository.findOne(numId);
   }
 
-  createClient(createClient: CreateClient) {
-    return createClient;
+  createClient(createClient: CreateClient): Promise<Client> {
+    let newClient = new Client();
+    newClient.clientIdNumber = createClient.client_id_number;
+    newClient.clientName = createClient.client_name;
+    return this.clientRepository.save(newClient);
   }
 }

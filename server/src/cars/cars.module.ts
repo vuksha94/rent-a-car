@@ -9,6 +9,7 @@ import { CarCategory } from './entities/car-category.entity';
 import { CarExpense } from './entities/car-expense.entity';
 import { CarRegistration } from './entities/car-registration';
 import { CarFuelType } from './entities/car-fuel-type.entity';
+import { RentModule } from 'src/rent/rent.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CarFuelType } from './entities/car-fuel-type.entity';
       CarRegistration,
       CarFuelType,
     ]),
+    RentModule,
   ],
   controllers: [CarsController],
   providers: [CarsService],

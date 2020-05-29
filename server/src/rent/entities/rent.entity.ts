@@ -36,17 +36,29 @@ export class Rent {
   @Column('datetime', { name: 'rent_datetime_to', nullable: true })
   rentDatetimeTo: Date | null;
 
-  @Column('int', { name: 'rent_fuel_start' })
-  rentFuelStart: number;
+  @Column({ type: 'decimal', name: 'rent_fuel_start', precision: 10, scale: 2 })
+  rentFuelStart: string;
 
-  @Column('int', { name: 'rent_fuel_finish', nullable: true })
-  rentFuelFinish: number | null;
+  @Column({
+    type: 'decimal',
+    name: 'rent_fuel_finish',
+    nullable: true,
+    precision: 10,
+    scale: 2,
+  })
+  rentFuelFinish: string | null;
 
-  @Column('int', { name: 'rent_km_start' })
-  rentKmStart: number;
+  @Column({ type: 'decimal', name: 'rent_km_start', precision: 10, scale: 2 })
+  rentKmStart: string;
 
-  @Column('int', { name: 'rent_km_finish', nullable: true })
-  rentKmFinish: number | null;
+  @Column({
+    type: 'decimal',
+    name: 'rent_km_finish',
+    nullable: true,
+    precision: 10,
+    scale: 2,
+  })
+  rentKmFinish: string | null;
 
   @ManyToOne(
     () => Car,

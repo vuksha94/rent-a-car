@@ -17,7 +17,7 @@ export class ClientsController {
     return this.clientsService.findOne(numId);
   }
 
-  // create new car
+  // create new client
   @Post()
   createCar(@Body() createClientDto: CreateClientDto) {
     return this.clientsService.createClient(createClientDto);

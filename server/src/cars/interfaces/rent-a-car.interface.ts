@@ -1,4 +1,4 @@
 export interface RentACar {
-  carId: string;
-  clientId: string;
+  carId: number;
+  clientId: number;
 }
