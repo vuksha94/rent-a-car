@@ -10,6 +10,7 @@ import { Car } from './entities/car.entity';
 import { CreateCarDto } from './dto/create-car.dto';
 import { Rent } from 'src/rent/entities/rent.entity';
 import { CarExpense } from './entities/car-expense.entity';
+import { ApiResponse } from 'src/api-response/api-response';
 
 @Injectable()
 export class CarsService {
@@ -30,8 +31,19 @@ export class CarsService {
   }
 
   // DONE
-  findOne(id: string): Promise<Car> {
-    return this.carRepository.findOne(id);
+  findOne(id: string): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+    return new Promise(async resolve => {
+      const car = await this.carRepository.findOne(id);
+      if (car === undefined) {
+        apiResponse.status = 'error';
+        apiResponse.statusCode = -1002;
+        apiResponse.message = "Car with provided id doesn't exisit";
+      } else {
+        apiResponse.data = car;
+      }
+      resolve(apiResponse);
+    });
   }
 
   // DONE

@@ -6,6 +6,7 @@ import { Rent } from 'src/rent/entities/rent.entity';
 import { CarExpense } from './entities/car-expense.entity';
 import { Car } from './entities/car.entity';
 import { CarModel } from './entities/car-model.entity';
+import { ApiResponse } from 'src/api-response/api-response';
 
 @Controller('cars')
 export class CarsController {
@@ -41,7 +42,7 @@ export class CarsController {
    *  */
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Car> {
+  findOne(@Param('id') id: string): Promise<ApiResponse> {
     return this.carsService.findOne(id);
   }
 
