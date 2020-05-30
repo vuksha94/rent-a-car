@@ -14,7 +14,7 @@ export class CarsController {
 
   // get all cars
   @Get()
-  findAll(): Promise<Car[]> {
+  findAll(): Promise<ApiResponse> {
     return this.carsService.findAll();
   }
 
@@ -48,17 +48,8 @@ export class CarsController {
 
   // create new car
   @Post()
-  createCar(@Body() createCarDto: CreateCarDto): Promise<Car> {
+  createCar(@Body() createCarDto: CreateCarDto): Promise<ApiResponse> {
     return this.carsService.createCar(createCarDto);
-  }
-
-  // rent a car e.g.POST /cars/rent/115123/120
-  @Get('rent/:carId/:clientId')
-  rentACar(
-    @Param('carId') carId: number,
-    @Param('clientId') clientId: number,
-  ): Promise<Rent> {
-    return this.carsService.rentACar({ carId, clientId });
   }
 
   // add expenses for car
@@ -66,7 +57,7 @@ export class CarsController {
   addExpenses(
     @Body() addExpensesDto: AddExpensesDto,
     @Param('carId') carId: number,
-  ): Promise<CarExpense> {
+  ): Promise<ApiResponse> {
     const { description, price } = addExpensesDto;
     return this.carsService.addCarExpenses({ description, price, carId });
   }

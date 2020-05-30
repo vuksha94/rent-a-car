@@ -27,6 +27,9 @@ export class Rent {
   @Column('int', { name: 'rent_car_id' })
   rentCarId: number;
 
+  @Column({ type: 'tinyint', width: 1, name: 'rent_active' })
+  rentActive: boolean;
+
   @Column('datetime', {
     name: 'rent_datetime_from',
     default: () => 'CURRENT_TIMESTAMP',

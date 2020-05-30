@@ -19,10 +19,14 @@ import { Rent } from 'src/rent/entities/rent.entity';
 @Index('car_model', ['carModelId'], {})
 @Index('car_category_id', ['carCategoryId'], {})
 @Index('car_fuel_type_id', ['carFuelTypeId'], {})
+@Index('car_registration_number', ['carRegistrationNumber'], {})
 @Entity('car', { schema: 'rentacar' })
 export class Car {
   @PrimaryGeneratedColumn({ type: 'int', name: 'car_id' })
   carId: number;
+
+  @Column({ type: 'varchar', name: 'car_registration_number', length: 10 })
+  carRegistrationNumber: string;
 
   @Column('int', { name: 'car_make_id' })
   carMakeId: number;
@@ -65,6 +69,7 @@ export class Car {
     () => CarMake,
     carMake => carMake.cars,
     {
+      eager: true,
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     },
@@ -76,6 +81,7 @@ export class Car {
     () => CarModel,
     carModel => carModel.cars,
     {
+      eager: true,
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     },
@@ -87,6 +93,7 @@ export class Car {
     () => CarCategory,
     carCategory => carCategory.cars,
     {
+      eager: true,
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     },
@@ -98,6 +105,7 @@ export class Car {
     () => CarFuelType,
     carFuelType => carFuelType.cars,
     {
+      eager: true,
       onDelete: 'RESTRICT',
       onUpdate: 'RESTRICT',
     },

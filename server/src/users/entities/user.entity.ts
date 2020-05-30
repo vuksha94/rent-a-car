@@ -8,8 +8,7 @@ import {
 import { CarExpense } from 'src/cars/entities/car-expense.entity';
 import { Rent } from 'src/rent/entities/rent.entity';
 
-@Index('IDX_8b74148f5712a28539a4ca4158', ['usersEmail'], { unique: true })
-@Index('IDX_fe62a84d8ea7e438d0f322c081', ['usersEmail'], { unique: true })
+@Index('user_email_unique', ['usersEmail'], { unique: true })
 @Entity('user', { schema: 'rentacar' })
 export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'users_id' })
