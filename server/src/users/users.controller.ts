@@ -11,9 +11,4 @@ export class UsersController {
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
-
-  @Post('login')
-  loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.usersService.loginUser(loginUserDto);
-  }
 }

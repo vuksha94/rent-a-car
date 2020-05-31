@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersController } from './users/users.controller';
@@ -25,6 +25,10 @@ import { CarFuelType } from './cars/entities/car-fuel-type.entity';
 import { CarMake } from './cars/entities/car-make.entity';
 import { CarModel } from './cars/entities/car-model.entity';
 import { CarRegistration } from './cars/entities/car-registration';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -53,6 +57,7 @@ import { CarRegistration } from './cars/entities/car-registration';
       ],
       synchronize: false,
     }),
+    AuthModule,
   ],
   controllers: [
     AppController,
@@ -60,6 +65,7 @@ import { CarRegistration } from './cars/entities/car-registration';
     CarsController,
     ClientsController,
     RentController,
+    AuthController,
   ],
   providers: [
     AppService,
@@ -67,6 +73,18 @@ import { CarRegistration } from './cars/entities/car-registration';
     CarsService,
     ClientsService,
     RentService,
+    AuthService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        UsersController,
+        CarsController,
+        ClientsController,
+        RentController,
+      );
+  }
+}
