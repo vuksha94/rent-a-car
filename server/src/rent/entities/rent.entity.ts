@@ -9,6 +9,7 @@ import {
 import { Car } from 'src/cars/entities/car.entity';
 import { Client } from 'src/clients/entities/client.entity';
 import { User } from 'src/users/entities/user.entity';
+import * as Validator from 'class-validator';
 
 @Index('rent_client_id', ['rentClientId'], {})
 @Index('rent_car_id', ['rentCarId'], {})
@@ -40,7 +41,10 @@ export class Rent {
   rentDatetimeTo: Date | null;
 
   @Column({ type: 'decimal', name: 'rent_fuel_start', precision: 10, scale: 2 })
-  rentFuelStart: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentFuelStart: number;
 
   @Column({
     type: 'decimal',
@@ -49,10 +53,16 @@ export class Rent {
     precision: 10,
     scale: 2,
   })
-  rentFuelFinish: string | null;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentFuelFinish: number | null;
 
   @Column({ type: 'decimal', name: 'rent_km_start', precision: 10, scale: 2 })
-  rentKmStart: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentKmStart: number;
 
   @Column({
     type: 'decimal',
@@ -61,7 +71,10 @@ export class Rent {
     precision: 10,
     scale: 2,
   })
-  rentKmFinish: string | null;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentKmFinish: number | null;
 
   @ManyToOne(
     () => Car,

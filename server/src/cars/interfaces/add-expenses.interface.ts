@@ -2,5 +2,5 @@ export interface AddExpenses {
   expenseId?: number;
   carId: number;
   description: string;
-  price: string;
+  price: number;
 }

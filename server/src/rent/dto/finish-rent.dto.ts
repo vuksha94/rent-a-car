@@ -1,5 +1,14 @@
+import * as Validator from 'class-validator';
 export class FinishRentDto {
   rentId: number;
-  rentFuelFinish: string;
-  rentKmFinish: string;
+
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentFuelFinish: number;
+
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  rentKmFinish: number;
 }

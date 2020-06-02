@@ -7,6 +7,7 @@ import { CarExpense } from './entities/car-expense.entity';
 import { Car } from './entities/car.entity';
 import { CarModel } from './entities/car-model.entity';
 import { ApiResponse } from 'src/api-response/api-response';
+import { CarRegisterDto } from './dto/car-register.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -60,5 +61,10 @@ export class CarsController {
   ): Promise<ApiResponse> {
     const { description, price } = addExpensesDto;
     return this.carsService.addCarExpenses({ description, price, carId });
+  }
+
+  @Post('register')
+  registerCar(@Body() carRegisterDto: CarRegisterDto) {
+    return this.carsService.registerCar(carRegisterDto);
   }
 }

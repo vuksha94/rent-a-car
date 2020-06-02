@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Car } from './car.entity';
 import { User } from 'src/users/entities/user.entity';
+import * as Validator from 'class-validator';
 
 @Index('ce_user_id', ['ceUserId'], {})
 @Index('ce_car_id', ['ceCarId'], {})
@@ -23,10 +24,16 @@ export class CarExpense {
   ceUserId: number;
 
   @Column('varchar', { name: 'ce_description', length: 64 })
+  @Validator.IsNotEmpty()
+  @Validator.IsString()
+  @Validator.Length(4, 1000)
   ceDescription: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, name: 'ce_price' })
-  cePrice: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  cePrice: number;
 
   @ManyToOne(
     () => Car,

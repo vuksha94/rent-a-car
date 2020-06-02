@@ -14,6 +14,7 @@ import { CarFuelType } from './car-fuel-type.entity';
 import { CarExpense } from './car-expense.entity';
 import { CarRegistration } from './car-registration';
 import { Rent } from 'src/rent/entities/rent.entity';
+import * as Validator from 'class-validator';
 
 @Index('car_make', ['carMakeId'], {})
 @Index('car_model', ['carModelId'], {})
@@ -26,6 +27,9 @@ export class Car {
   carId: number;
 
   @Column({ type: 'varchar', name: 'car_registration_number', length: 10 })
+  @Validator.IsNotEmpty()
+  @Validator.IsString()
+  @Validator.Length(4, 10)
   carRegistrationNumber: string;
 
   @Column('int', { name: 'car_make_id' })
@@ -41,10 +45,19 @@ export class Car {
   carCategoryId: number;
 
   @Column('int', { name: 'car_year' })
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber({
+    allowInfinity: false,
+    allowNaN: false,
+  })
+  @Validator.IsPositive()
   carYear: number;
 
   @Column('decimal', { name: 'car_engine_volume', precision: 10, scale: 2 })
-  carEngineVolume: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  carEngineVolume: number;
 
   @Column('tinyint', { name: 'car_available', width: 1, default: () => "'1'" })
   carAvailable: boolean;
@@ -55,7 +68,10 @@ export class Car {
     scale: 2,
     default: () => "'0.00'",
   })
-  carKmDist: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  carKmDist: number;
 
   @Column('decimal', {
     name: 'car_fuel_level',
@@ -63,7 +79,10 @@ export class Car {
     scale: 2,
     default: () => "'0.00'",
   })
-  carFuelLevel: string;
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
+  carFuelLevel: number;
 
   @ManyToOne(
     () => CarMake,
@@ -111,6 +130,9 @@ export class Car {
     },
   )
   @JoinColumn([{ name: 'car_fuel_type_id', referencedColumnName: 'cftId' }])
+  @Validator.IsNotEmpty()
+  @Validator.IsNumber()
+  @Validator.IsPositive()
   carFuelType: CarFuelType;
 
   @OneToMany(

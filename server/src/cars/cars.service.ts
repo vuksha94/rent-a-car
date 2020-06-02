@@ -9,6 +9,8 @@ import { Car } from './entities/car.entity';
 import { CreateCarDto } from './dto/create-car.dto';
 import { CarExpense } from './entities/car-expense.entity';
 import { ApiResponse } from 'src/api-response/api-response';
+import { CarRegisterDto } from './dto/car-register.dto';
+import { CarRegistration } from './entities/car-registration';
 
 @Injectable()
 export class CarsService {
@@ -19,6 +21,8 @@ export class CarsService {
     private carModelRepository: Repository<CarModel>,
     @InjectRepository(CarExpense)
     private carExpenseRepository: Repository<CarExpense>,
+    @InjectRepository(CarRegistration)
+    private carRegistrationRepository: Repository<CarRegistration>,
   ) {}
 
   // DONE
@@ -87,6 +91,31 @@ export class CarsService {
           apiResponse.statusCode = -1003;
           apiResponse.message = 'Registration number already taken';
           //apiResponse.data = err;
+          resolve(apiResponse);
+        });
+    });
+  }
+  registerCar(registerCarDto: CarRegisterDto) {
+    let carRegistration = new CarRegistration();
+    carRegistration.crCarId = registerCarDto.carId;
+    const now = new Date();
+    carRegistration.crRegistrationFrom = now;
+    const oneYearToday = new Date();
+    oneYearToday.setFullYear(now.getFullYear() + 1);
+    carRegistration.crRegistrationTo = oneYearToday;
+
+    return new Promise(resolve => {
+      const apiResponse = new ApiResponse();
+      this.carRegistrationRepository
+        .save(carRegistration)
+        .then(reg => {
+          apiResponse.data = reg;
+          resolve(apiResponse);
+        })
+        .catch(err => {
+          apiResponse.status = 'error';
+          apiResponse.statusCode = -1000;
+          apiResponse.data = err;
           resolve(apiResponse);
         });
     });
