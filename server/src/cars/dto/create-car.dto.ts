@@ -12,10 +12,9 @@ export class CreateCarDto {
   carCategoryId: number;
 
   @Validator.IsNotEmpty()
-  @Validator.IsNumber()
-  @Validator.IsPositive()
   carYear: number;
 
+  @Validator.IsNotEmpty()
   carEngineVolume: number;
   carAvailable?: boolean;
   carKmDistance?: number;

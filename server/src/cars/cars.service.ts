@@ -72,6 +72,16 @@ export class CarsService {
     return Promise.resolve(apiResponse);
   }
 
+  async findModelsFromMake(makeId: number): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const models = await this.carModelRepository.find({
+      where: { cmCmId: makeId },
+    });
+    apiResponse.data = models;
+    return Promise.resolve(apiResponse);
+  }
+
   // DONE
   async findAllMakes(): Promise<ApiResponse> {
     const apiResponse = new ApiResponse();

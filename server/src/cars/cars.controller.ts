@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { AddExpensesDto } from './dto/add-expenses.dto';
@@ -21,8 +21,10 @@ export class CarsController {
 
   // get all car models
   @Get('models')
-  findAllModels(): Promise<ApiResponse> {
-    return this.carsService.findAllModels();
+  findAllModels(@Query('makeId') makeId: number): Promise<ApiResponse> {
+    return makeId
+      ? this.carsService.findModelsFromMake(makeId)
+      : this.carsService.findAllModels();
   }
 
   // get car model with given id DONE
