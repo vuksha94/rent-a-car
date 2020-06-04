@@ -45,7 +45,7 @@ function responseHandler(
     // server error
     const apiResponseType: ApiResponseType = {
       status: "error",
-      data: res.data,
+      error: res.data,
     };
     return resolve(apiResponseType);
   }

@@ -78,6 +78,12 @@ export class UsersLoginPage extends React.Component {
     }
     return (
       <Container>
+        <Alert
+          variant="danger"
+          className={this.state.errorMessage ? "" : "d-none"}
+        >
+          {this.state.errorMessage}
+        </Alert>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
@@ -104,12 +110,6 @@ export class UsersLoginPage extends React.Component {
             Log In
           </Button>
         </Form>
-        <Alert
-          variant="danger"
-          className={this.state.errorMessage ? "" : "d-none"}
-        >
-          {this.state.errorMessage}
-        </Alert>
       </Container>
     );
   }

@@ -14,11 +14,13 @@ import { CarsComponent } from "./components/Cars/CarsComponent/CarsComponent";
 import { ClientsComponent } from "./components/Clients/ClientsComponent/ClientsComponent";
 import { ClientComponent } from "./components/Clients/ClientComponent/ClientComponent";
 import { UsersLoginPage } from "./components/Users/UsersLoginPage/UsersLoginPage";
+import { CarAddComponent } from "./components/Cars/CarAddComponent/CarAddComponent";
 
 const menuLinks = [
   new MenuItem("Home", "/"),
   new MenuItem("Login", "/user/login"),
   new MenuItem("Clients", "/clients"),
+  new MenuItem("Cars", "/cars"),
 ];
 
 ReactDOM.render(
@@ -27,6 +29,7 @@ ReactDOM.render(
     <HashRouter>
       <Switch>
         <Route exact path="/" component={HomePage}></Route>
+        <Route path="/cars/add" component={CarAddComponent}></Route>
         <Route path="/cars" component={CarsComponent}></Route>
         <Route path="/user/login" component={UsersLoginPage}></Route>
         <Route path="/clients" component={ClientsComponent}></Route>
