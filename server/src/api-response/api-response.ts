@@ -5,8 +5,8 @@ export class ApiResponse {
   data?: any | any[];
 
   constructor(
-    status: string = 'success',
-    statusCode: number = 0,
+    status = 'success',
+    statusCode = 0,
     message?: string,
     data?: any,
   ) {

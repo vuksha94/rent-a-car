@@ -17,9 +17,9 @@ export class AuthMiddleware implements NestMiddleware {
     if (!authorizationHeader) {
       throw new HttpException('Token not found', HttpStatus.UNAUTHORIZED);
     }
-    let token = authorizationHeader.toString().split(' ')[1];
+    const token = authorizationHeader.toString().split(' ')[1];
     try {
-      const data = <JwtDataDto>jwt.verify(token, JwtSecret);
+      const data = jwt.verify(token, JwtSecret) as JwtDataDto;
 
       if (data.jwtData.ip !== req.ip) {
         throw new HttpException('Token not valid', HttpStatus.UNAUTHORIZED);
