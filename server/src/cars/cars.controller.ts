@@ -21,7 +21,7 @@ export class CarsController {
 
   // get all car models
   @Get('models')
-  findAllModels(): Promise<CarModel[]> {
+  findAllModels(): Promise<ApiResponse> {
     return this.carsService.findAllModels();
   }
 
@@ -29,6 +29,24 @@ export class CarsController {
   @Get('models/:id')
   findModel(@Param('id') id: string) {
     return this.carsService.findModel(id);
+  }
+
+  // get all car makes
+  @Get('makes')
+  findAllMakes(): Promise<ApiResponse> {
+    return this.carsService.findAllMakes();
+  }
+
+  // get all categories
+  @Get('categories')
+  findAllCategories(): Promise<ApiResponse> {
+    return this.carsService.findAllCategories();
+  }
+
+  // get all fuel types
+  @Get('fueltypes')
+  findAllFuelTypes(): Promise<ApiResponse> {
+    return this.carsService.findAllFuelTypes();
   }
 
   @Get('available')

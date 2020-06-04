@@ -11,6 +11,8 @@ import { CarExpense } from './entities/car-expense.entity';
 import { ApiResponse } from 'src/api-response/api-response';
 import { CarRegisterDto } from './dto/car-register.dto';
 import { CarRegistration } from './entities/car-registration';
+import { CarCategory } from './entities/car-category.entity';
+import { CarFuelType } from './entities/car-fuel-type.entity';
 
 @Injectable()
 export class CarsService {
@@ -19,6 +21,12 @@ export class CarsService {
     private carRepository: Repository<Car>,
     @InjectRepository(CarModel)
     private carModelRepository: Repository<CarModel>,
+    @InjectRepository(CarMake)
+    private carMakeRepository: Repository<CarMake>,
+    @InjectRepository(CarCategory)
+    private carCategoryRepository: Repository<CarCategory>,
+    @InjectRepository(CarFuelType)
+    private carFuelTypeRepository: Repository<CarFuelType>,
     @InjectRepository(CarExpense)
     private carExpenseRepository: Repository<CarExpense>,
     @InjectRepository(CarRegistration)
@@ -56,9 +64,41 @@ export class CarsService {
   }
 
   // DONE
-  findAllModels(): Promise<CarModel[]> {
-    return this.carModelRepository.find();
+  async findAllModels(): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const models = await this.carModelRepository.find();
+    apiResponse.data = models;
+    return Promise.resolve(apiResponse);
   }
+
+  // DONE
+  async findAllMakes(): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const makes = await this.carMakeRepository.find();
+    apiResponse.data = makes;
+    return Promise.resolve(apiResponse);
+  }
+
+  // DONE
+  async findAllCategories(): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const categories = await this.carCategoryRepository.find();
+    apiResponse.data = categories;
+    return Promise.resolve(apiResponse);
+  }
+
+  // DONE
+  async findAllFuelTypes(): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const fuelTypes = await this.carFuelTypeRepository.find();
+    apiResponse.data = fuelTypes;
+    return Promise.resolve(apiResponse);
+  }
+
   // DONE
   findModel(id: string): Promise<CarModel> {
     return this.carModelRepository.findOne(id, { relations: ['cmCm'] });
@@ -66,7 +106,7 @@ export class CarsService {
 
   // DONE
   createCar(createCar: CreateCarDto): Promise<ApiResponse> {
-    let newCar = new Car();
+    const newCar = new Car();
     newCar.carRegistrationNumber = createCar.carRegistrationNumber;
     newCar.carMakeId = createCar.carMakeId;
     newCar.carModelId = createCar.carModelId;
@@ -96,7 +136,7 @@ export class CarsService {
     });
   }
   registerCar(registerCarDto: CarRegisterDto) {
-    let carRegistration = new CarRegistration();
+    const carRegistration = new CarRegistration();
     carRegistration.crCarId = registerCarDto.carId;
     const now = new Date();
     carRegistration.crRegistrationFrom = now;
@@ -123,7 +163,7 @@ export class CarsService {
 
   // DONE
   addCarExpenses(addExpenses: AddExpenses): Promise<ApiResponse> {
-    let newExpense = new CarExpense();
+    const newExpense = new CarExpense();
     newExpense.ceUserId = 1; // ****************************************enter id from logged user(admin)
     newExpense.ceCarId = addExpenses.carId;
     newExpense.ceDescription = addExpenses.description;
