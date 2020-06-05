@@ -1,21 +1,38 @@
 import React from "react";
-import { Form, Button, Container, Alert } from "react-bootstrap";
-import { UserLoginType } from "../../../types/UserLoginType";
-import api, { saveToken } from "../../../api/api";
+import { Form, Button, Container, Alert, CardImg } from "react-bootstrap";
 import { ApiResponseType } from "../../../types/dto/ApiResponseType";
+import api from "../../../api/api";
 import { Redirect } from "react-router-dom";
 
-export class UsersLoginPage extends React.Component {
-  state: UserLoginType;
+interface AddCarExpenceState {
+  carId: number;
+  description: string;
+  price: string;
+  errorMessage: string;
+  validated: boolean;
+  expenseAdded: boolean;
+  expenseAddedId?: number;
+}
 
-  constructor(props: Readonly<{}>) {
+interface CarAddExpensesProperties {
+  match: {
+    params: {
+      id: number;
+    };
+  };
+}
+export class CarAddExpenseComponent extends React.Component {
+  state: AddCarExpenceState;
+
+  constructor(props: CarAddExpensesProperties) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      isLoggedIn: false,
+      carId: props.match.params.id,
+      description: "",
+      price: "",
       errorMessage: "",
       validated: false,
+      expenseAdded: false,
     };
   }
 
@@ -26,30 +43,6 @@ export class UsersLoginPage extends React.Component {
     this.setState(newState);
   };
 
-  private setLoggedInState(isLoggedIn: boolean) {
-    const newState = Object.assign(this.state, {
-      isLoggedIn: isLoggedIn,
-    });
-    this.setState(newState);
-  }
-
-  private setErrorMessage(errorMessage: string) {
-    const newState = Object.assign(this.state, {
-      errorMessage: errorMessage,
-    });
-    this.setState(newState);
-  }
-  /*
-  emailChanged = (event: any) => {
-    let newState: UserLoginType = { ...this.state };
-    newState.email = event.target.value;
-    this.setState(newState);
-  };
-  passwordChanged = (event: any) => {
-    let newState: UserLoginType = { ...this.state };
-    newState.password = event.target.value;
-    this.setState(newState);
-  };*/
   handleSubmit = (event: any) => {
     const form = event.currentTarget;
     event.preventDefault();
@@ -58,9 +51,12 @@ export class UsersLoginPage extends React.Component {
       return;
     }
 
-    api("auth/login", "post", {
-      email: this.state.email,
-      password: this.state.password,
+    //let carId, description, price;
+    const { carId, description, price } = this.state;
+
+    api("cars/expenses/" + carId, "post", {
+      description,
+      price,
     }).then((res: ApiResponseType) => {
       if (res.status === "error") {
         this.setErrorMessage("Greska na serveru!");
@@ -71,16 +67,20 @@ export class UsersLoginPage extends React.Component {
         if (res.data?.status === "error") {
           this.setErrorMessage(res.data.message);
         } else {
-          console.log(res.data?.data);
-          saveToken(res.data?.data.token);
-          this.setLoggedInState(true);
+          this.setAddedExpense(true, res.data?.data.ceId);
         }
       }
     });
   };
+
   render() {
-    if (this.state.isLoggedIn === true) {
-      return <Redirect to="/"></Redirect>;
+    if (this.state.expenseAdded) {
+      const { carId, expenseAddedId } = this.state;
+      return (
+        <Redirect
+          to={"/cars/" + carId + "?expenseAdded=" + expenseAddedId}
+        ></Redirect>
+      );
     }
     return (
       <Container>
@@ -95,37 +95,35 @@ export class UsersLoginPage extends React.Component {
           validated={this.state.validated}
           onSubmit={this.handleSubmit}
         >
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
+          <Form.Group>
             <Form.Control
-              type="email"
-              placeholder="Enter email"
-              id="email"
-              value={this.state.email}
+              as="textarea"
+              placeholder="Enter description..."
+              id="description"
+              value={this.state.description}
               onChange={this.formInputChanged}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Email cannot be empty.
+              Please enter valid description.
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
+          <Form.Group>
             <Form.Control
-              type="password"
-              placeholder="Password"
-              id="password"
-              value={this.state.password}
+              type="text"
+              placeholder="Enter Price..."
+              id="price"
+              value={this.state.price}
               onChange={this.formInputChanged}
               required
             />
             <Form.Control.Feedback type="invalid">
-              Password cannot be empty.
+              Please enter valid price.
             </Form.Control.Feedback>
           </Form.Group>
           <Button variant="primary" type="submit">
-            Log In
+            Add
           </Button>
         </Form>
       </Container>
@@ -135,6 +133,20 @@ export class UsersLoginPage extends React.Component {
   private setFormValidate(validated: boolean) {
     const newState = Object.assign(this.state, {
       validated: validated,
+    });
+    this.setState(newState);
+  }
+  private setErrorMessage(errorMessage: string) {
+    const newState = Object.assign(this.state, {
+      errorMessage: errorMessage,
+    });
+    this.setState(newState);
+  }
+
+  private setAddedExpense(isAdded: boolean, expenseAddedId: string) {
+    const newState = Object.assign(this.state, {
+      expenseAdded: isAdded,
+      expenseAddedId: expenseAddedId,
     });
     this.setState(newState);
   }

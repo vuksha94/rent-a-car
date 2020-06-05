@@ -18,7 +18,7 @@ export default function api(path: string, method: "get" | "post", body?: any) {
       .catch((err) => {
         const apiResponseType: ApiResponseType = {
           status: "error",
-          data: err,
+          error: err,
         };
         resolve(apiResponseType);
       });
@@ -47,6 +47,7 @@ function responseHandler(
       status: "error",
       error: res.data,
     };
+
     return resolve(apiResponseType);
   }
 

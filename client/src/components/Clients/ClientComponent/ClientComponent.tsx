@@ -10,6 +10,10 @@ interface ClientComponentProperties {
   };
 }
 
+/*interface ClientComponentState {
+  client: 
+}*/
+
 export class ClientComponent extends React.Component<
   ClientComponentProperties
 > {
@@ -25,7 +29,7 @@ export class ClientComponent extends React.Component<
       <Container>
         <Card>
           <Card.Body>
-            <Card.Title>{this.state.id}</Card.Title>
+            <Card.Title></Card.Title>
             <Card.Text></Card.Text>
           </Card.Body>
         </Card>
@@ -46,15 +50,5 @@ export class ClientComponent extends React.Component<
     this.getClientData();
   }
 
-  getClientData() {
-    setTimeout(() => {
-      console.log("getClientData");
-      const clientType: ClientType = {
-        id: this.props.match.params.id,
-        name: "Stefan",
-        number_id: "0098445678",
-      };
-      this.setState(clientType);
-    }, 100);
-  }
+  getClientData() {}
 }

@@ -3,4 +3,5 @@ export class UserLoginType {
   password?: string;
   isLoggedIn?: boolean;
   errorMessage?: string;
+  validated?: boolean;
 }

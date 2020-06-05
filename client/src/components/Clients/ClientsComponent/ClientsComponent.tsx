@@ -29,9 +29,7 @@ export class ClientsComponent extends React.Component<
             {this.state.clients?.map((client) => {
               return (
                 <li>
-                  <Link className="nav-link" to={"/client/" + client.id}>
-                    {client.name} | {client.number_id}
-                  </Link>
+                  <Link className="nav-link" to={"/client/"}></Link>
                 </li>
               );
             })}
@@ -54,29 +52,5 @@ export class ClientsComponent extends React.Component<
     this.getClientsData();
   }*/
 
-  getClientsData() {
-    setTimeout(() => {
-      console.log("getClientData");
-      const clients: ClientsType = {
-        clients: [
-          {
-            id: 1,
-            name: "Stefan",
-            number_id: "0098445678",
-          },
-          {
-            id: 2,
-            name: "Marko",
-            number_id: "858975444",
-          },
-          {
-            id: 3,
-            name: "Milos",
-            number_id: "1234445678",
-          },
-        ],
-      };
-      this.setState(clients);
-    }, 100);
-  }
+  getClientsData() {}
 }

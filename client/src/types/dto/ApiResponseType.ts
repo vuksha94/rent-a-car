@@ -9,5 +9,11 @@ export interface ApiResponseFromServerType {
 export interface ApiResponseType {
   status: "ok" | "error" | "login";
   data?: ApiResponseFromServerType | null;
-  error?: any;
+  error?: ServerErrorType;
+}
+
+interface ServerErrorType {
+  message: string[];
+  error: string;
+  statusCode: number;
 }

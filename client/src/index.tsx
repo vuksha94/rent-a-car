@@ -15,11 +15,14 @@ import { ClientsComponent } from "./components/Clients/ClientsComponent/ClientsC
 import { ClientComponent } from "./components/Clients/ClientComponent/ClientComponent";
 import { UsersLoginPage } from "./components/Users/UsersLoginPage/UsersLoginPage";
 import { CarAddComponent } from "./components/Cars/CarAddComponent/CarAddComponent";
+import { CarAddExpenseComponent } from "./components/Cars/CarAddExpenseComponent/CarAddExpenseComponent";
+import { CarRentComponent } from "./components/Cars/CarRentComponent/CarRentComponent";
+import { RentFinishComponent } from "./components/Cars/Rent/RentFinishComponent/RentFinishComponent";
 
 const menuLinks = [
   new MenuItem("Home", "/"),
   new MenuItem("Login", "/user/login"),
-  new MenuItem("Clients", "/clients"),
+  //new MenuItem("Clients", "/clients"),
   new MenuItem("Cars", "/cars"),
 ];
 
@@ -30,10 +33,19 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={HomePage}></Route>
         <Route path="/cars/add" component={CarAddComponent}></Route>
+        <Route
+          path="/cars/:id/addExpense"
+          component={CarAddExpenseComponent}
+        ></Route>
+        <Route path="/cars/:id/rent" component={CarRentComponent}></Route>
         <Route path="/cars" component={CarsComponent}></Route>
         <Route path="/user/login" component={UsersLoginPage}></Route>
         <Route path="/clients" component={ClientsComponent}></Route>
         <Route path="/client/:id" component={ClientComponent}></Route>
+        <Route
+          path="/rent/finish/:carId"
+          component={RentFinishComponent}
+        ></Route>
       </Switch>
     </HashRouter>
   </React.StrictMode>,

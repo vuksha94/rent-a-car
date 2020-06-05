@@ -1,5 +1,6 @@
 export class ClientType {
-  id?: number;
-  number_id?: string;
-  name?: string;
+  clientId?: number;
+  clientIdNumber?: string;
+  clientName?: string;
+  clientAvailable?: boolean;
 }
