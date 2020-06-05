@@ -25,6 +25,13 @@ export class Client {
   @Validator.Length(1, 32)
   clientName: string;
 
+  @Column('tinyint', {
+    name: 'client_available',
+    width: 1,
+    default: () => "'1'",
+  })
+  clientAvailable: boolean;
+
   @OneToMany(
     () => Rent,
     rent => rent.rentClient,

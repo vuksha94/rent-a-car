@@ -16,6 +16,10 @@ export class RentController {
   finishRent(@Body() finishRentDto: FinishRentDto): Promise<ApiResponse> {
     return this.rentService.finishRent(finishRentDto);
   }
+  @Get('active/:carId')
+  findActiveRent(@Param('carId') carId: number) {
+    return this.rentService.findActiveRent(carId);
+  }
   // rent a car e.g.POST /cars/rent/115123/120
   @Get('/:carId/:clientId')
   rentACar(

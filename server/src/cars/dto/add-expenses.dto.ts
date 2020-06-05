@@ -7,7 +7,5 @@ export class AddExpensesDto {
   description: string;
 
   @Validator.IsNotEmpty()
-  @Validator.IsNumber()
-  @Validator.IsPositive()
   price: number;
 }

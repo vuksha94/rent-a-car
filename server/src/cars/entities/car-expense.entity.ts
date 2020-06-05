@@ -35,6 +35,9 @@ export class CarExpense {
   @Validator.IsPositive()
   cePrice: number;
 
+  @Column('datetime', { name: 'ce_date' })
+  ceDate: Date;
+
   @ManyToOne(
     () => Car,
     car => car.carExpenses,

@@ -3,6 +3,8 @@ import { CreateClient } from './interfaces/create-client.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
+import { ApiResponse } from 'src/api-response/api-response';
+import { CreateClientDto } from './dto/create-client.dto';
 
 @Injectable()
 export class ClientsService {
@@ -11,18 +13,36 @@ export class ClientsService {
     private clientRepository: Repository<Client>,
   ) {}
 
-  findAll(): Promise<Client[]> {
-    return this.clientRepository.find();
+  async findAll(): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+
+    const clients = await this.clientRepository.find();
+    apiResponse.data = clients;
+    return Promise.resolve(apiResponse);
   }
 
-  findOne(numId: string) {
-    return this.clientRepository.findOne(numId);
+  async findOne(numId: string): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+    const client = await this.clientRepository.findOne({
+      where: { clientIdNumber: numId },
+    });
+    if (!client) {
+      apiResponse.status = 'error';
+      apiResponse.message = 'Client not found.';
+    } else {
+      apiResponse.data = client;
+    }
+    return Promise.resolve(apiResponse);
   }
 
-  createClient(createClient: CreateClient): Promise<Client> {
-    let newClient = new Client();
-    newClient.clientIdNumber = createClient.client_id_number;
-    newClient.clientName = createClient.client_name;
-    return this.clientRepository.save(newClient);
+  async createClient(createClient: CreateClientDto): Promise<ApiResponse> {
+    const apiResponse = new ApiResponse();
+    const newClient = new Client();
+    newClient.clientIdNumber = createClient.clientIdNumber;
+    newClient.clientName = createClient.clientName;
+    console.log(newClient);
+    const client = await this.clientRepository.save(newClient);
+    apiResponse.data = client;
+    return Promise.resolve(apiResponse);
   }
 }

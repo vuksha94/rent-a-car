@@ -172,7 +172,7 @@ export class CarsService {
   }
 
   // DONE
-  addCarExpenses(addExpenses: AddExpenses): Promise<ApiResponse> {
+  async addCarExpenses(addExpenses: AddExpenses): Promise<ApiResponse> {
     const newExpense = new CarExpense();
     newExpense.ceUserId = 1; // ****************************************enter id from logged user(admin)
     newExpense.ceCarId = addExpenses.carId;
@@ -180,7 +180,7 @@ export class CarsService {
     newExpense.cePrice = addExpenses.price;
     return new Promise(async resolve => {
       const apiResponse = new ApiResponse();
-      apiResponse.data = this.carExpenseRepository.save(newExpense);
+      apiResponse.data = await this.carExpenseRepository.save(newExpense);
       resolve(apiResponse);
     });
   }
