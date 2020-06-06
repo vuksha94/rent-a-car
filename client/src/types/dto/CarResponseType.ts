@@ -10,6 +10,7 @@ export interface Car {
   carModel: CarModel;
   carCategory: CarCategory;
   carFuelType: CarFuelType;
+  carRegistrations: CarRegistration[];
 }
 
 export interface CarMake {
@@ -28,4 +29,10 @@ export interface CarCategory {
 export interface CarFuelType {
   cftId: number;
   cftName: string;
+}
+export interface CarRegistration {
+  crId: number;
+  crCarId: number;
+  crRegistrationFrom: string;
+  crRegistrationTo: string;
 }
