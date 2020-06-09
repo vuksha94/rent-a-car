@@ -41,8 +41,13 @@ export class ClientsService {
     newClient.clientIdNumber = createClient.clientIdNumber;
     newClient.clientName = createClient.clientName;
     console.log(newClient);
-    const client = await this.clientRepository.save(newClient);
-    apiResponse.data = client;
+    try {
+      const client = await this.clientRepository.save(newClient);
+      apiResponse.data = client;
+    } catch (err) {
+      apiResponse.status = 'error';
+      apiResponse.message = 'ID is taken.';
+    }
     return Promise.resolve(apiResponse);
   }
 }
