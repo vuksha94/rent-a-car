@@ -37,7 +37,9 @@ export class CarsService {
   findAll(): Promise<ApiResponse> {
     return new Promise(async resolve => {
       const apiResponse = new ApiResponse();
-      apiResponse.data = await this.carRepository.find();
+      apiResponse.data = await this.carRepository.find({
+        relations: ['carRegistrations'],
+      });
       resolve(apiResponse);
     });
   }
@@ -46,7 +48,9 @@ export class CarsService {
   findOne(id: string): Promise<ApiResponse> {
     const apiResponse = new ApiResponse();
     return new Promise(async resolve => {
-      const car = await this.carRepository.findOne(id);
+      const car = await this.carRepository.findOne(id, {
+        relations: ['carExpenses', 'rents', 'clients'],
+      });
       if (car === undefined) {
         apiResponse.status = 'error';
         apiResponse.statusCode = -1002;

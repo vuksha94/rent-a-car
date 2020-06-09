@@ -6,6 +6,8 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { CarMake } from './car-make.entity';
 import { CarModel } from './car-model.entity';
@@ -15,6 +17,7 @@ import { CarExpense } from './car-expense.entity';
 import { CarRegistration } from './car-registration';
 import { Rent } from 'src/rent/entities/rent.entity';
 import * as Validator from 'class-validator';
+import { Client } from 'src/clients/entities/client.entity';
 
 @Index('car_make', ['carMakeId'], {})
 @Index('car_model', ['carModelId'], {})
@@ -152,4 +155,15 @@ export class Car {
     rent => rent.rentCar,
   )
   rents: Rent[];
+
+  @ManyToMany(type => Client)
+  @JoinTable({
+    name: 'rent',
+    joinColumn: { name: 'rent_car_id', referencedColumnName: 'carId' },
+    inverseJoinColumn: {
+      name: 'rent_client_id',
+      referencedColumnName: 'clientId',
+    },
+  })
+  clients: Client[];
 }
