@@ -1,3 +1,6 @@
+import { RentData } from "./RentDataResponse";
+import { ClientType } from "../ClientType";
+
 export interface Car {
   carId: number;
   carRegistrationNumber: string;
@@ -11,6 +14,10 @@ export interface Car {
   carCategory: CarCategory;
   carFuelType: CarFuelType;
   carRegistrations: CarRegistration[];
+  isRegistered?: boolean;
+  carExpenses?: CarExpense[];
+  rents?: RentData[];
+  clients?: ClientType[];
 }
 
 export interface CarMake {
@@ -35,4 +42,12 @@ export interface CarRegistration {
   crCarId: number;
   crRegistrationFrom: string;
   crRegistrationTo: string;
+}
+export interface CarExpense {
+  ceId: number;
+  ceCarId: number;
+  ceUserId: number;
+  ceDescription: string;
+  cePrice: string;
+  ceDate: string;
 }

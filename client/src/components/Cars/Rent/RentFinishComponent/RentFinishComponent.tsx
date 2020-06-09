@@ -1,13 +1,12 @@
 import React from "react";
 import { Form, Button, Container, Alert, Table } from "react-bootstrap";
-import { ClientType } from "../../../../types/ClientType";
-import { Car } from "../../../../types/dto/CarResponseType";
-import { RentData } from "../../../../types/dto/RentDataResponse";
 import api from "../../../../api/api";
 import { ApiResponseType } from "../../../../types/dto/ApiResponseType";
 import { Redirect } from "react-router-dom";
+import { RentData } from "../../../../types/dto/RentDataResponse";
 
 interface RentFinishState {
+  isUserLoggedIn: boolean;
   rent: RentData;
   carId: number;
   errorMessage: string;
@@ -29,6 +28,7 @@ export class RentFinishComponent extends React.Component {
   constructor(props: RentFinishProperties) {
     super(props);
     this.state = {
+      isUserLoggedIn: true,
       rent: {},
       carId: props.match.params.carId,
       errorMessage: "",
@@ -95,6 +95,9 @@ export class RentFinishComponent extends React.Component {
   }
 
   render() {
+    if (this.state.isUserLoggedIn === false) {
+      return <Redirect to="/user/login" />;
+    }
     if (this.state.rentFinished) {
       return <Redirect to="/cars/"></Redirect>;
     }
@@ -168,7 +171,7 @@ export class RentFinishComponent extends React.Component {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
+          <Form.Group>
             <Form.Label>Fuel level</Form.Label>
             <Form.Control
               type="number"
@@ -194,6 +197,10 @@ export class RentFinishComponent extends React.Component {
   }
   getData() {
     api("/rent/active/" + this.state.carId, "get").then((res) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        return;
+      }
       if (res.status === "ok") {
         this.putDataInState(res.data?.data);
       } else {
@@ -208,5 +215,13 @@ export class RentFinishComponent extends React.Component {
     });
     this.setState(newState);
     console.log(this.state);
+  }
+
+  private setLogginState(isLoggedIn: boolean) {
+    const newState = Object.assign(this.state, {
+      isUserLoggedIn: isLoggedIn,
+    });
+
+    this.setState(newState);
   }
 }

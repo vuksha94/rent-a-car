@@ -8,7 +8,7 @@ import "popper.js/dist/popper.js";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "@fortawesome/fontawesome-free/css/fontawesome.css";
 import { MainMenu, MenuItem } from "./components/MainMenu/MainMenu";
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route, Redirect } from "react-router-dom";
 import HomePage from "./components/HomePage/HomePage";
 import { CarsComponent } from "./components/Cars/CarsComponent/CarsComponent";
 import { ClientsComponent } from "./components/Clients/ClientsComponent/ClientsComponent";
@@ -18,12 +18,15 @@ import { CarAddComponent } from "./components/Cars/CarAddComponent/CarAddCompone
 import { CarAddExpenseComponent } from "./components/Cars/CarAddExpenseComponent/CarAddExpenseComponent";
 import { CarRentComponent } from "./components/Cars/CarRentComponent/CarRentComponent";
 import { RentFinishComponent } from "./components/Cars/Rent/RentFinishComponent/RentFinishComponent";
-
+import { CarDetailsComponent } from "./components/Cars/CarDetailsComponent/CarDetailsComponent";
+import api from "./api/api";
+import LogOut from "./components/LogOutComponent/LogOutComponent";
 const menuLinks = [
   new MenuItem("Home", "/"),
-  new MenuItem("Login", "/user/login"),
-  //new MenuItem("Clients", "/clients"),
+  // new MenuItem("Clients", "/clients"),
   new MenuItem("Cars", "/cars"),
+  new MenuItem("Login", "/user/login", "right", false),
+  new MenuItem("Log out", "/logout", "right"),
 ];
 
 ReactDOM.render(
@@ -38,10 +41,12 @@ ReactDOM.render(
           component={CarAddExpenseComponent}
         ></Route>
         <Route path="/cars/:id/rent" component={CarRentComponent}></Route>
+        <Route path="/cars/:id" component={CarDetailsComponent}></Route>
         <Route path="/cars" component={CarsComponent}></Route>
         <Route path="/user/login" component={UsersLoginPage}></Route>
         <Route path="/clients" component={ClientsComponent}></Route>
         <Route path="/client/:id" component={ClientComponent}></Route>
+        <Route path="/logout" component={LogOut}></Route>
         <Route
           path="/rent/finish/:carId"
           component={RentFinishComponent}

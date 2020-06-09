@@ -12,6 +12,7 @@ import {
 import { Redirect } from "react-router-dom";
 
 interface CarAddComponentState {
+  isUserLoggedIn: boolean;
   carToAdd: CreateCarType;
   makes: CarMake[];
   models: CarModel[];
@@ -35,6 +36,7 @@ export class CarAddComponent extends React.Component {
       years.push(i);
     }
     this.state = {
+      isUserLoggedIn: true,
       carToAdd: {},
       errorMessage: "",
       categories: [],
@@ -62,6 +64,9 @@ export class CarAddComponent extends React.Component {
   };
 
   render() {
+    if (this.state.isUserLoggedIn === false) {
+      return <Redirect to="/user/login" />;
+    }
     if (this.state.carAdded) {
       return (
         <Redirect
@@ -208,6 +213,11 @@ export class CarAddComponent extends React.Component {
 
   getAllData() {
     api("cars/makes", "get").then((res: ApiResponseType) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         this.putCarMakesInState(res.data?.data);
       } else {
@@ -216,6 +226,11 @@ export class CarAddComponent extends React.Component {
     });
 
     api("cars/categories", "get").then((res: ApiResponseType) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         this.putCarCategoriesInState(res.data?.data);
       } else {
@@ -223,6 +238,11 @@ export class CarAddComponent extends React.Component {
       }
     });
     api("cars/fueltypes", "get").then((res: ApiResponseType) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         this.putCarFuelTypesInState(res.data?.data);
       } else {
@@ -233,6 +253,11 @@ export class CarAddComponent extends React.Component {
 
   getModelsForMake(makeId: number) {
     api("cars/models?makeId=" + makeId, "get").then((res: ApiResponseType) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         this.putCarModelsInState(res.data?.data);
       } else {
@@ -292,6 +317,11 @@ export class CarAddComponent extends React.Component {
     console.log(this.state.carToAdd);
 
     api("cars", "post", this.state.carToAdd).then((res: ApiResponseType) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         if (res.data?.status === "error") {
           this.setErrorMessage(res.data.message);
@@ -324,6 +354,14 @@ export class CarAddComponent extends React.Component {
     const newState = Object.assign(this.state, {
       errorMessage: errorMessage,
     });
+    this.setState(newState);
+  }
+
+  private setLogginState(isLoggedIn: boolean) {
+    const newState = Object.assign(this.state, {
+      isUserLoggedIn: isLoggedIn,
+    });
+
     this.setState(newState);
   }
 }

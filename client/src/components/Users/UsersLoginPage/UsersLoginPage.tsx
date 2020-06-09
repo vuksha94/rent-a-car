@@ -95,7 +95,7 @@ export class UsersLoginPage extends React.Component {
           validated={this.state.validated}
           onSubmit={this.handleSubmit}
         >
-          <Form.Group controlId="formBasicEmail">
+          <Form.Group>
             <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
@@ -110,7 +110,7 @@ export class UsersLoginPage extends React.Component {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
+          <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"

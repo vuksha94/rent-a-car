@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Button, Container, Alert, CardImg } from "react-bootstrap";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import { ApiResponseType } from "../../../types/dto/ApiResponseType";
-import api from "../../../api/api";
+import api, { isLoggedIn } from "../../../api/api";
 import { Redirect } from "react-router-dom";
 
 interface AddCarExpenceState {
+  isUserLoggedIn: boolean;
   carId: number;
   description: string;
   price: string;
@@ -27,6 +28,7 @@ export class CarAddExpenseComponent extends React.Component {
   constructor(props: CarAddExpensesProperties) {
     super(props);
     this.state = {
+      isUserLoggedIn: true,
       carId: props.match.params.id,
       description: "",
       price: "",
@@ -74,6 +76,9 @@ export class CarAddExpenseComponent extends React.Component {
   };
 
   render() {
+    if (this.state.isUserLoggedIn === false) {
+      return <Redirect to="/user/login" />;
+    }
     if (this.state.expenseAdded) {
       const { carId, expenseAddedId } = this.state;
       return (
@@ -130,6 +135,10 @@ export class CarAddExpenseComponent extends React.Component {
     );
   }
 
+  componentWillMount() {
+    this.setLogginState(isLoggedIn());
+  }
+
   private setFormValidate(validated: boolean) {
     const newState = Object.assign(this.state, {
       validated: validated,
@@ -148,6 +157,14 @@ export class CarAddExpenseComponent extends React.Component {
       expenseAdded: isAdded,
       expenseAddedId: expenseAddedId,
     });
+    this.setState(newState);
+  }
+
+  private setLogginState(isLoggedIn: boolean) {
+    const newState = Object.assign(this.state, {
+      isUserLoggedIn: isLoggedIn,
+    });
+
     this.setState(newState);
   }
 }

@@ -4,10 +4,11 @@ import { ApiResponseType } from "../../../types/dto/ApiResponseType";
 import api from "../../../api/api";
 import { Redirect } from "react-router-dom";
 import { ClientType } from "../../../types/ClientType";
-import { ClientsType } from "../../../types/ClientsType";
+// import { ClientsType } from "../../../types/ClientsType";
 import { Car } from "../../../types/dto/CarResponseType";
 
 interface CarRentComponentState {
+  isUserLoggedIn: boolean;
   carId: number;
   car?: Car;
   selectedClient?: ClientType;
@@ -35,6 +36,7 @@ export class CarRentComponent extends React.Component {
   constructor(props: CarRentProperties) {
     super(props);
     this.state = {
+      isUserLoggedIn: true,
       carId: props.match.params.id,
       clients: [],
       errorMessage: "",
@@ -200,6 +202,9 @@ export class CarRentComponent extends React.Component {
   };
 
   render() {
+    if (this.state.isUserLoggedIn === false) {
+      return <Redirect to="/user/login" />;
+    }
     if (this.state.carRented) {
       // const { carId, carRented } = this.state;
       return <Redirect to={"/cars/?carRented"}></Redirect>;
@@ -288,6 +293,10 @@ export class CarRentComponent extends React.Component {
 
   private getCarDetails(carId: number) {
     api("/cars/" + carId, "get").then((res) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        return;
+      }
       if (res.status === "ok") {
         this.putCarInState(res.data?.data);
       } else {
@@ -298,6 +307,11 @@ export class CarRentComponent extends React.Component {
 
   private getClients() {
     api("/clients", "get").then((res) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
       if (res.status === "ok") {
         this.putClientsInState(res.data?.data);
       } else {
@@ -432,6 +446,14 @@ export class CarRentComponent extends React.Component {
     const newState = Object.assign(this.state, {
       carRented: isAdded,
     });
+    this.setState(newState);
+  }
+
+  private setLogginState(isLoggedIn: boolean) {
+    const newState = Object.assign(this.state, {
+      isUserLoggedIn: isLoggedIn,
+    });
+
     this.setState(newState);
   }
 }

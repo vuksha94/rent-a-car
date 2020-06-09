@@ -2,7 +2,7 @@ import React from "react";
 import api from "../../../api/api";
 import { Table, Container, Row, Col } from "react-bootstrap";
 import { Car, CarRegistration } from "../../../types/dto/CarResponseType";
-import { HashRouter, Link } from "react-router-dom";
+import { HashRouter, Link, Redirect } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlusCircle,
@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 interface CarComponentState {
+  isUserLoggedIn: boolean;
   cars: Car[];
 }
 
@@ -22,10 +23,14 @@ export class CarsComponent extends React.Component {
     super(props);
 
     this.state = {
+      isUserLoggedIn: true,
       cars: [],
     };
   }
   render() {
+    if (this.state.isUserLoggedIn === false) {
+      return <Redirect to="/user/login" />;
+    }
     return (
       <Container>
         <Row>
@@ -107,7 +112,13 @@ export class CarsComponent extends React.Component {
     if (car.carAvailable) {
       return (
         <HashRouter>
-          <Link to={car.carAvailable ? "/cars/" + car.carId + "/rent" : "#"}>
+          <Link
+            to={
+              car.carAvailable && car.isRegistered
+                ? "/cars/" + car.carId + "/rent"
+                : "#"
+            }
+          >
             <FontAwesomeIcon icon={faCar} />
           </Link>
         </HashRouter>
@@ -158,7 +169,6 @@ export class CarsComponent extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props);
     this.getCars();
   }
 
@@ -174,15 +184,37 @@ export class CarsComponent extends React.Component {
 
   private getCars() {
     api("/cars", "get").then((res) => {
+      if (res.status === "error" || res.status === "login") {
+        this.setLogginState(false);
+        console.log("greska");
+        return;
+      }
+
       if (res.status === "ok" && res.data && res.data.data) {
         this.putCarsInState(res.data.data);
-      } else {
-        console.log("greska");
       }
     });
   }
 
+  private setLogginState(isLoggedIn: boolean) {
+    const newState = Object.assign(this.state, {
+      isUserLoggedIn: isLoggedIn,
+    });
+
+    this.setState(newState);
+  }
+
   private putCarsInState(cars: Car[]) {
+    cars = cars.map((car) => {
+      let registered = false;
+      if (car.carRegistrations.length > 0) {
+        const activeReg = car.carRegistrations.find(
+          this.findActiveRegistration
+        );
+        if (activeReg) registered = true;
+      }
+      return { ...car, isRegistered: registered };
+    });
     // sort cars by registration expiry desc
     const sortedCars = cars.sort((a: Car, b: Car) => {
       if (!a.carRegistrations) return -1; // if no registration

@@ -74,3 +74,12 @@ function getToken(): string {
 export function saveToken(token: string): void {
   localStorage.setItem("AUTH_TOKEN", token);
 }
+
+export function isLoggedIn() {
+  if (localStorage.getItem("AUTH_TOKEN")) return true;
+  return false;
+}
+
+export function logOut() {
+  localStorage.removeItem("AUTH_TOKEN");
+}
