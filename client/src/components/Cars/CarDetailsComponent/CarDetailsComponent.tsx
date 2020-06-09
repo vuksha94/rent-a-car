@@ -131,8 +131,8 @@ export class CarDetailsComponent extends React.Component {
     });
     return (
       <tr>
-        <td>Total</td>
-        <td>{sum}</td>
+        <td className="text-bold">Total</td>
+        <td className="text-bold">{sum.toFixed(2)}</td>
         <td></td>
       </tr>
     );

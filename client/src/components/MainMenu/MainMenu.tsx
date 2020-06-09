@@ -2,23 +2,17 @@ import React from "react";
 import { Link, HashRouter } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import { isLoggedIn } from "../../api/api";
+import { Navbar } from "react-bootstrap";
 
 export class MenuItem {
   href: string;
   title: string;
   float: string;
-  showWhenLoggedIn: boolean;
 
-  constructor(
-    title: string,
-    href: string,
-    float = "left",
-    showWhenLoggedIn = true
-  ) {
+  constructor(title: string, href: string, float = "left") {
     this.href = href;
     this.title = title;
     this.float = float;
-    this.showWhenLoggedIn = showWhenLoggedIn;
   }
 }
 
@@ -62,18 +56,43 @@ export class MainMenu extends React.Component<MainMenuProperties> {
   }
   render() {
     return (
-      <Nav>
-        {this.state.items.map((item) => {
-          // if (!this.state.isUserLoggedIn === item.showWhenLoggedIn) return;
-          return (
-            <HashRouter>
-              <Link className="nav-link" to={item.href} key={item.href}>
-                {item.title}
-              </Link>
-            </HashRouter>
-          );
-        })}
-      </Nav>
+      <Navbar bg="secondary" expand="sm">
+        <Navbar.Toggle aria-controls="navbar-rent-a-car" />
+        <Navbar.Collapse id="navbar-rent-a-car">
+          <Nav className="mr-auto">
+            {this.state.items.map((item) => {
+              if (item.float !== "left") return;
+              return (
+                <HashRouter>
+                  <Link
+                    className={"nav-link float-" + item.float}
+                    to={item.href}
+                    key={item.href}
+                  >
+                    {item.title}
+                  </Link>
+                </HashRouter>
+              );
+            })}
+          </Nav>
+          <Nav className="mr-sm-2">
+            {this.state.items.map((item) => {
+              if (item.float !== "right") return;
+              return (
+                <HashRouter>
+                  <Link
+                    className={"nav-link float-" + item.float}
+                    to={item.href}
+                    key={item.href}
+                  >
+                    {item.title}
+                  </Link>
+                </HashRouter>
+              );
+            })}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     );
   }
 }

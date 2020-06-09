@@ -152,7 +152,7 @@ export class CarsComponent extends React.Component {
       return (
         <Link
           onClick={() => this.registerCar(carId)}
-          to={"/cars/register/" + carId}
+          to={"?carRegistered=" + carId}
         >
           Register
         </Link>

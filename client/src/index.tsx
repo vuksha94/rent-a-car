@@ -25,7 +25,7 @@ const menuLinks = [
   new MenuItem("Home", "/"),
   // new MenuItem("Clients", "/clients"),
   new MenuItem("Cars", "/cars"),
-  new MenuItem("Login", "/user/login", "right", false),
+  new MenuItem("Login", "/user/login"),
   new MenuItem("Log out", "/logout", "right"),
 ];
 

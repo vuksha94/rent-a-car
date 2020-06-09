@@ -16,3 +16,32 @@ code {
   text: red;
   font-weight: bold;
 }
+
+#root div.row {
+  /*padding: 20px 0;*/
+  /*border: 1px solid blue;*/
+}
+#root .form-control.is-invalid,
+.was-validated .form-control:invalid {
+  border-color: #dc3545;
+  background-image: none !important;
+}
+#root .form-control.is-valid,
+.was-validated .form-control:valid {
+  border-color: #28a745;
+  background-image: none !important;
+}
+
+#root .container {
+  padding: 20px 0;
+}
+
+#root #navbar-rent-a-car a {
+  color: white;
+}
+#root #navbar-rent-a-car a:hover {
+  background-color: #898e92;
+}
+#root .text-bold {
+  font-weight: bold;
+}

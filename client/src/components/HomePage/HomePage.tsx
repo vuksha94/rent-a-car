@@ -1,10 +1,24 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import { HashRouter, Link } from "react-router-dom";
 
 function HomePage() {
   return (
     <Container>
-      <div>Home</div>
+      <Row>
+        <Col>
+          <div>
+            This is <b>RENT A CAR</b> web application
+          </div>
+          <div>
+            Click on{" "}
+            <HashRouter>
+              <Link to="/cars">Cars tab </Link>
+            </HashRouter>
+            to manage all functionalities about car renting
+          </div>
+        </Col>
+      </Row>
     </Container>
   );
 }

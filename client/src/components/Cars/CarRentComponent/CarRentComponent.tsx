@@ -1,12 +1,25 @@
 import React from "react";
-import { Form, Button, Container, Alert, Row, Card } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Alert,
+  Row,
+  Card,
+  Col,
+} from "react-bootstrap";
 import { ApiResponseType } from "../../../types/dto/ApiResponseType";
 import api from "../../../api/api";
 import { Redirect } from "react-router-dom";
 import { ClientType } from "../../../types/ClientType";
 // import { ClientsType } from "../../../types/ClientsType";
 import { Car } from "../../../types/dto/CarResponseType";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+interface ErrorAddClient {
+  name?: string;
+  numberId?: string;
+}
 interface CarRentComponentState {
   isUserLoggedIn: boolean;
   carId: number;
@@ -19,6 +32,7 @@ interface CarRentComponentState {
   validated: boolean;
   validatedSearchClient: boolean;
   addClientFormValidated: boolean;
+  errorsAddClient: ErrorAddClient;
   carRented: boolean;
   showAddClientForm: boolean;
 }
@@ -44,6 +58,7 @@ export class CarRentComponent extends React.Component {
       validated: false,
       validatedSearchClient: false,
       addClientFormValidated: false,
+      errorsAddClient: {},
       carRented: false,
       showAddClientForm: false,
     };
@@ -90,13 +105,41 @@ export class CarRentComponent extends React.Component {
     this.setState(newState);
   }
 
+  private checkAddClientFormValidation(): boolean {
+    console.log("check");
+    const nameRegExp = /^([a-z]|[ć|ž|č|đ|š| ]){1,}$/i;
+    const numberIdRegExp = /^\d{8,9}$/;
+    let errorObj: ErrorAddClient = {};
+    if (!this.state.clientToAdd?.clientName?.match(nameRegExp)) {
+      errorObj.name = "Name not valid.";
+      console.log("name not valid");
+    }
+    if (!this.state.clientToAdd?.clientIdNumber?.match(numberIdRegExp)) {
+      errorObj.numberId = "ID should have 8 or 9 digits.";
+    }
+    if (errorObj.name || errorObj.numberId) {
+      this.setErrorsAddClient(errorObj);
+      return false;
+    }
+    this.setErrorsAddClient({});
+    return true;
+  }
+
+  private setErrorsAddClient(errorsAddClient: ErrorAddClient) {
+    const newState = Object.assign(this.state, {
+      errorsAddClient: errorsAddClient,
+    });
+    this.setState(newState);
+  }
+
   handleAddClientSubmit = (event: any) => {
     const form = event.currentTarget;
     event.preventDefault();
-    if (form.checkValidity() === false) {
+    if (!this.checkAddClientFormValidation() || !form.checkValidity()) {
       this.setAddClientFormValidate(true);
       return;
     }
+    //if (this.checkAddClientFormValidation()) return;
     if (!this.state.clientToAdd) return;
     const { clientIdNumber, clientName } = this.state.clientToAdd;
 
@@ -150,7 +193,7 @@ export class CarRentComponent extends React.Component {
       if (res.status === "ok") {
         if (res.data?.status === "error") {
           // Client not found
-          this.setErrorMessage(res.data.message);
+          this.setErrorMessage(res.data.message + " Create client to proceed.");
           this.setShowAddClientForm(true);
 
           this.setClientToAddId(searchNumberId);
@@ -211,74 +254,81 @@ export class CarRentComponent extends React.Component {
     }
     return (
       <Container>
-        <Row>
-          <Alert
-            variant="danger"
-            className={this.state.errorMessage ? "" : "d-none"}
-          >
-            {this.state.errorMessage}
-          </Alert>
-          <Alert
-            variant="success"
-            className={this.state.successMessage ? "" : "d-none"}
-          >
-            {this.state.successMessage}
-          </Alert>
+        <Row className={this.state.errorMessage ? "" : "d-none"}>
+          <Col>
+            <Alert variant="danger">{this.state.errorMessage}</Alert>
+          </Col>
         </Row>
-        <Row>{this.makeCarDetails(this.state.car)}</Row>
-        <Row>
-          <Form
-            noValidate
-            validated={this.state.validated}
-            onSubmit={this.handleSubmit}
-          >
-            <Form.Group>
-              <Form.Control
-                as="select"
-                custom
-                id="selectedClientId"
-                value={this.state.selectedClient?.clientId || ""}
-                onChange={(event: any) =>
-                  this.clientChanged(event.target.value)
-                }
-                required
-              >
-                <option value="">Choose client</option>
-                {this.state.clients.map(this.singleClient)}
-              </Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Please choose a client.
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Button variant="primary" type="submit">
-              Rent a car
-            </Button>
-          </Form>
+        <Row className={this.state.successMessage ? "" : "d-none"}>
+          <Col>
+            <Alert
+              variant="success"
+              className={this.state.successMessage ? "" : "d-none"}
+            >
+              {this.state.successMessage}
+            </Alert>
+          </Col>
         </Row>
 
         <Row>
-          <Form
-            noValidate
-            validated={this.state.validatedSearchClient}
-            onSubmit={this.handleSubmitSearch}
-          >
-            <Form.Group>
-              <Form.Control
-                id="searchClient"
-                name="searchClient"
-                type="text"
-                placeholder="Search client number id..."
-                required
-              ></Form.Control>
-              <Form.Control.Feedback type="invalid">
-                Number id can't be empty.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Search
-            </Button>
-          </Form>
+          <Col>
+            <h1>Rent a car</h1>
+            {this.makeCarDetails(this.state.car)}
+            <Form
+              noValidate
+              validated={this.state.validated}
+              onSubmit={this.handleSubmit}
+            >
+              <Form.Group>
+                <Form.Control
+                  as="select"
+                  custom
+                  id="selectedClientId"
+                  value={this.state.selectedClient?.clientId || ""}
+                  onChange={(event: any) =>
+                    this.clientChanged(event.target.value)
+                  }
+                  required
+                >
+                  <option value="">Choose client</option>
+                  {this.state.clients.map(this.singleClient)}
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  Please choose a client.
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <Button variant="primary" type="submit">
+                Rent a car
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <Form
+              noValidate
+              validated={this.state.validatedSearchClient}
+              onSubmit={this.handleSubmitSearch}
+            >
+              <Form.Group>
+                <Form.Control
+                  id="searchClient"
+                  name="searchClient"
+                  type="text"
+                  placeholder="Search client number id..."
+                  required
+                ></Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  Number id can't be empty.
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                <FontAwesomeIcon icon={faSearch} />
+              </Button>
+            </Form>
+          </Col>
         </Row>
 
         {this.state.showAddClientForm ? this.makeAddClientForm() : ""}
@@ -322,45 +372,51 @@ export class CarRentComponent extends React.Component {
 
   private makeAddClientForm() {
     return (
-      <Row>
-        <Form
-          noValidate
-          validated={this.state.addClientFormValidated}
-          onSubmit={this.handleAddClientSubmit}
-        >
-          <Form.Group>
-            <Form.Label>Number ID</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter number id..."
-              id="clientIdNumber"
-              value={this.state.clientToAdd?.clientIdNumber || ""}
-              onChange={this.formInputChanged}
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Client number id cannot be empty.
-            </Form.Control.Feedback>
-          </Form.Group>
+      <Row id="addClient">
+        <Col>
+          <h1>Create client</h1>
+          <Form
+            noValidate
+            validated={this.state.addClientFormValidated}
+            onSubmit={this.handleAddClientSubmit}
+          >
+            <Form.Group>
+              <Form.Label>Number ID</Form.Label>
+              <Form.Control
+                className={
+                  this.state.errorsAddClient?.numberId ? "is-invalid" : ""
+                }
+                type="text"
+                placeholder="Enter number id..."
+                id="clientIdNumber"
+                value={this.state.clientToAdd?.clientIdNumber || ""}
+                onChange={this.formInputChanged}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                {this.state.errorsAddClient?.numberId}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter name..."
-              id="clientName"
-              value={this.state.clientToAdd?.clientName || ""}
-              onChange={this.formInputChanged}
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Name cannot be empty.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Create
-          </Button>
-        </Form>
+            <Form.Group>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name..."
+                id="clientName"
+                value={this.state.clientToAdd?.clientName || ""}
+                onChange={this.formInputChanged}
+                required
+              />
+              <Form.Control.Feedback type="invalid">
+                {this.state.errorsAddClient?.name}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Create
+            </Button>
+          </Form>
+        </Col>
       </Row>
     );
   }
